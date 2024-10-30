@@ -22,6 +22,8 @@ public class TicTacToeComputer {
 		//Get user to choose their icon
 		char playerIcon = getPlayerIcon();
 		
+		keyboard.nextLine();
+		
 		//Create a loop that continues until the game is won
 		//Continues while game is not won by player (1) and not won by computer (2), and not a tie
 		while((!gameWon(board, player, playerIcon) && !gameWon(board, computer, playerIcon)) && !gameTied(board, playerIcon))
@@ -42,7 +44,7 @@ public class TicTacToeComputer {
 			
 			//Computer Turn
 			
-			if(!gameTied(board, playerIcon) || !gameWon(board, player, playerIcon)) //Make sure game is not over yet
+			if(!gameTied(board, playerIcon) && !gameWon(board, player, playerIcon)) //Make sure game is not over yet
 			{
 			board = computerTurn(board, isFirstTurn, computer, player);
 			}
@@ -191,28 +193,56 @@ public class TicTacToeComputer {
 		//Create array for coordinates
 		int[] choice = new int[choiceLength];
 		
-		//System.out.println("Player " + player + ":"); //Tell the user which player is going
+		String input;
+		do {
+			System.out.print("Select a tile (Row, Column): ");
+			input = keyboard.nextLine();
+			//keyboard.nextLine();
+		}while(!validCoordinates(input));
 		
-		do { //Get row choice and validate
-		System.out.print("Select a row (left to right): ");
-		choice[0] = (keyboard.nextInt());
-		}while(!withinBounds(choice[0], boardRow)); //If the entered value is not within the board bounds, keep looping.
+		int counter = 0; //Used to put coordinates in right spots
+		for(int i = 0; i < input.length(); i++) {
+			if(Character.isDigit(input.charAt(i))) {
+				choice[counter] = Integer.parseInt(input.substring(i, i+1));
+				counter++;
+			}
+		}
 		
-		do { //Get column choice and validate
-		System.out.print("Select a column (top to bottom): ");
-		choice[1] = (keyboard.nextInt());
-		}while(!withinBounds(choice[1], boardCol)); //If the entered value is not within the board bounds, keep looping.
 		
 		return choice;
 		
 	}
 	//Check if the inputed choice is within the bounds of the array.
-	public static boolean withinBounds(int choice, int length) {
-		if(choice >= 0 && choice < length) //Is the choice within the given bounds.
+	public static boolean validCoordinates(String input) {
+		
+		input.trim();
+		
+		int validCoordinates = 0; //Counts to check how many valid coordinates are in the string
+		int[] coordinates = new int[2];
+		
+		for(int i = 0; i < input.length(); i++) {
+			if(Character.isDigit(input.charAt(i)))
+			{
+				if(validCoordinates < 2)
+				{
+				coordinates[validCoordinates] = Integer.parseInt(input.substring(i, i+1));
+				}
+				
+				validCoordinates++;
+			}
+		}
+		
+		boolean validNumbers = true;
+		for(int i = 0; i < coordinates.length; i++) {
+			if(!(coordinates[i] >= 0 && coordinates[i] <=2))
+				validNumbers = false;
+		}
+		
+		if(validCoordinates == 2 && validNumbers)
 			return true;
 		else
 		{
-			System.out.println("Invalid choice, out of bounds.");
+			System.out.println("Please enter 2 valid coordinate values for the tile you wish to select");
 			return false;
 		}
 	}
