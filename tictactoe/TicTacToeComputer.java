@@ -174,7 +174,7 @@ public class TicTacToeComputer {
 			{
 				int[] center = {1, 1};
 				System.out.println("Computer is taking tile [1, 1]");
-				board.setTile(center, player); //Center spot taken by computer
+				board.setTile(center, computer); //Center spot taken by computer
 			}
 			else
 			{
